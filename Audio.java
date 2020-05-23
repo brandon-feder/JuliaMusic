@@ -22,6 +22,7 @@ public class Audio {
     private static int duration;
     private static int numBytes;
 
+    // Get audio file info, process it/read save/create save, etc.
     public static void getAudioData() {
         System.out.println("Getting Audio Data");
         try {
@@ -41,6 +42,7 @@ public class Audio {
         }
     }
 
+    // Play the file.
     public static void play() {
         try {
             File file = new File(Settings.audio_file_path);
@@ -68,6 +70,7 @@ public class Audio {
         }
     }
 
+    // Read the raw data from the audio file
     private static void getRawAudioData() throws IOException, UnsupportedAudioFileException {
         System.out.println(" === Getting Raw Audio Data");
         AudioInputStream stream = AudioSystem.getAudioInputStream(new File(Settings.audio_file_path));
@@ -84,6 +87,7 @@ public class Audio {
         numBytes /= 2;
     }
 
+    // Get info about the wav file
     private static void getAudioFileInfo() throws IOException, UnsupportedAudioFileException {
         System.out.println(" === Getting Audio File Info");
         File file = new File(Settings.audio_file_path);
@@ -93,6 +97,7 @@ public class Audio {
         numBytes = (int) stream.getFrameLength() * stream.getFormat().getFrameSize();
     }
 
+    // Split the raw data from the WAV file into overlapping frames
     private static void getAudioDataFrames() throws Exception {
         System.out.println(" === Getting Audio Data Seperate Frames");
         data_frames = new int[Settings.FPS * duration / 1000][Settings.frame_range];
@@ -108,6 +113,7 @@ public class Audio {
         }
     }
 
+    // Get some part of a set of data
     private static int[] getDataRange(int[] data, int range, int start) {
         int[] data_range = new int[range];
 
@@ -118,6 +124,7 @@ public class Audio {
         return data_range;
     }
 
+    // Calculate the DFT. ( not all of it, but some of it because know one cars about the very high frequencies )
     private static int[] getDFT(int[] data) throws Exception {
         int N = data.length;
         int[] k_list = new int[N / Settings.DFT_range_factor];
@@ -148,7 +155,8 @@ public class Audio {
 
         return DFT.coefs;
     }
-
+    
+    // A class that uses threading to calculate the DFT faster
     public static class DFT extends Thread {
         public static int min_k;
         public static int next_k;
@@ -186,6 +194,7 @@ public class Audio {
         }
     }
 
+    // Save the audio data in a json file so it does not beed to be reprocessed every time
     public static void saveAudioData() {
         JSONObject jsonObject = new JSONObject();
 
@@ -219,6 +228,7 @@ public class Audio {
         }
     }
 
+    // Read the audio save JSON file and parse it, get its values, and put those values in there respective arrays
     public static void readAudioSave() {
         data_frames = new int[Settings.FPS * duration / 1000][Settings.frame_range];
         DFT_frames = new int[data_frames.length][Settings.frame_range / Settings.DFT_range_factor];
@@ -264,7 +274,6 @@ public class Audio {
                 i++;
             }
         } catch (IOException | ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

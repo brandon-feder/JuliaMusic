@@ -13,7 +13,7 @@ public class Settings {
     public static int frame_range = 3000;
 
     public static int canvas_dims = 1000;
-    public static int DFT_range_factor = 32;
+    public static int DFT_range_factor = 32; // Only process that last 1/DFT_range_factor of the array
 
     public static float amplitude_min_change = 6f;
 

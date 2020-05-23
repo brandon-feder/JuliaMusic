@@ -13,6 +13,7 @@ public class Julia {
         return isInSet_Sub(Cr, Ci, r, i, 0);
     }
 
+    // My implementation of the Julia Set recursive function
     private static int isInSet_Sub(float Cr, float Ci, float Zr, float Zi, int i) {
         if(Zr*Zr + Zi*Zi >= 4) {
             return i;
@@ -24,10 +25,18 @@ public class Julia {
             return isInSet_Sub(Cr, Ci, new_Zr, new_Zi, i+1);
         }
     }
-
+     // Calculates the next value variable a in the equation here https://en.wikipedia.org/wiki/Julia_set#/media/File:JSr07885.gif 
+     // based off of the the last value, the amplitude of the current data frame, etc.
     public static float getA(int[] data) {
-        int sum = 0;
+        // I am not going to comment every line, but here is how this worls:
+        // 1. The sum of all the points are found to get the total amplitude
+        // 2. The # frames since a was changed is incremented
+        // 3. If the amplitude is less then some constant, it is made 0.
+        // 4. If the amplitude is avoce some constant, enough time has past since the last change, and the 
+            // average is greater than 1 ( this is pointless. I just feel like I will break something because otherwise I dont know wht I added it )
+        // 5. Otherwise. do some self explanatory stuff
 
+        int sum = 0;
         for(int point : data) {
             sum += point;
         }
@@ -38,8 +47,6 @@ public class Julia {
             last_sum = sum;
             a_rate = 0;
         }
-
-        // System.out.println(Settings.amplitude_min_change);
 
         if(Math.abs((float)sum/data.length) >= 1 && frames_since_change > Settings.amplitude_min_change && Math.abs(last_sum) > Math.abs(sum)) {
             a_rate = -(a /Math.abs(a)) * Math.abs(((float)sum/data.length) / 10);
