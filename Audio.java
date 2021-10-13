@@ -170,7 +170,7 @@ public class Audio {
 
             for (int n = 0; n < data.length; n++) {
                 real += data[n] * Math.cos(Math.PI * 2d * (double) k * (double) n / (double) data.length);
-                imag += data[n] * Math.cos(Math.PI * 2d * (double) k * (double) n / (double) data.length);
+                imag += data[n] * Math.sin(Math.PI * 2d * (double) k * (double) n / (double) data.length);
             }
 
             real /= 1000;
